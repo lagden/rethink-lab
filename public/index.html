@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Websocket Chat</title>
+	</head>
+	<body>
+		<h1>Chat</h1>
+		<input type="text" id="msg">
+		<pre id="container"></pre>
+		<script type="text/javascript">
+			const container = document.querySelector('#container')
+			const protocolo = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+			const porta = protocolo === 'wss:' ? 443: 8081
+			const msg = document.querySelector('#msg')
+			const ws = new WebSocket(`${protocolo}//${window.location.hostname}:${porta}/chat`)
+
+			function handlerMsg(event) {
+				if (event.keyCode === 13) {
+					const v = event.currentTarget.value
+					event.currentTarget.value = ''
+					ws.send(JSON.stringify({
+						type: 'message',
+						text: v
+					}))
+				}
+			}
+
+			function onMessage(event) {
+				console.log('[message]')
+				container.appendChild(document.createTextNode(event.data))
+			}
+
+			function onOpen(event) {
+				console.log('[opened]')
+				msg.addEventListener('keyup', handlerMsg)
+			}
+
+			function onClose(event) {
+				console.log('[disconnected]')
+				msg.removeEventListener('keyup', handlerMsg)
+			}
+
+			ws.onopen = onOpen
+			ws.onclose = onClose
+			ws.onmessage = onMessage
+		</script>
+	</body>
+</html>
