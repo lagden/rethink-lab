@@ -2,56 +2,105 @@
 
 const {join} = require('path')
 const {createReadStream} = require('fs')
+const {PassThrough} = require('stream')
 const http = require('http')
-// const r = require('rethinkdb')
 const {Server} = require('uws')
-const heartbeat = require('./heartbeat')
-
-const sockets = [];
+const {lookup} = require('mime-types')
+// const r = require('rethinkdb')
+const broadcast = require('./broadcast')
 
 // WebServer
 const server = http.createServer((req, res) => {
-	const readStream = createReadStream(join(__dirname, 'public', 'index.html'), 'utf8')
-	res.writeHead(200, {'Content-Type': 'text/html'})
-	readStream.pipe(res)
+	const pass = new PassThrough()
+	const file = req.url === '/' ? 'index.html' : req.url
+	const mime = lookup(file)
+	if (mime) {
+		res.setHeader('Content-Type', mime)
+	}
+	const read = createReadStream(join(__dirname, 'public', file), 'utf8')
+	read.on('error', console.error).pipe(pass).pipe(res)
 })
 
 // WebSocket
 const wss = new Server({server})
 
-function onMessage(message) {
-	console.log(message)
-	try {
-		const data = JSON.parse(message)
-		switch(data.type) {
-			case 'message':
-				console.dir(`message: ${message}`, {colors: true})
-				break
-			case 'feed':
-				console.dir(`feed: ${message}`, {colors: true})
-				break
-			default:
-				console.log(`type not found: ${data.type}`)
+function findClient(id) {
+	let _to = false
+	wss.clients.forEach(client => {
+		if (client.readyState === 1 && client._key === id) {
+			console.log('achou o cli...', client._key)
+			_to = client
 		}
-	} catch (err) {
-		console.dir(err, {colors: true})
+	})
+	return _to
+}
+
+function online(ws) {
+	const users = []
+	wss.clients.forEach(client => {
+		if (client !== ws && client.readyState === 1) {
+			users.push(client._key)
+		}
+	})
+	console.log()
+	ws.send(JSON.stringify({
+		type: 'listUsers',
+		users
+	}))
+}
+
+function onMessage(id) {
+	return _data => {
+		try {
+			const data = JSON.parse(_data)
+			const _to = findClient(data.to)
+			switch (data.type) {
+				case 'message':
+					if (_to) {
+						data.from = id
+						_to.send(JSON.stringify(data))
+					}
+					break
+				default:
+					console.log(`type not found: ${data.type}`)
+			}
+		} catch (err) {
+			console.dir(err, {colors: true})
+		}
 	}
 }
 
-wss.on('connection', ws => {
-	console.dir(ws._socket, {colors: true})
+function onClose(id) {
+	return () => {
+		broadcast(JSON.stringify({
+			type: 'removeUser',
+			text: id
+		}), wss)
+	}
+}
+
+function onConnection(ws) {
+	// console.log(ws.upgradeReq.headers)
 	const id = ws.upgradeReq.headers['sec-websocket-key']
+	ws._key = id
+	// ws._user = {from_auth}
+	// ws._broker = {from_auth}
 
-	console.log('++++++++++++++++', id)
+	// Carrega a lista de usuários
+	online(ws)
 
-	heartbeat(wss, ws)
-	ws.on('message', onMessage)
-	ws.send(JSON.stringify({
-		type: 'corretora'
-	}))
+	// Avisa que você tb está online
+	broadcast(JSON.stringify({
+		type: 'addUser',
+		text: id
+	}), wss, ws)
 
-	sockets[id] = ws;
-})
+	// Listeners
+	ws.on('message', onMessage(id))
+	ws.on('close', onClose(id))
+}
+
+wss.on('connection', onConnection)
 
 function onListen() {
 	console.log('websocket on 8081')

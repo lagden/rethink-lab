@@ -4,7 +4,7 @@
   "description": "Apenas um show",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "xo"
   },
   "keywords": [
     "rethinkdb",
@@ -14,6 +14,7 @@
   "author": "Thiago Lagden",
   "license": "MIT",
   "dependencies": {
+    "mime-types": "2.1.17",
     "rethinkdb": "2.3.3",
     "uws": "8.14.1"
   },
@@ -24,6 +25,15 @@
     "envs": [
       "node"
     ],
-    "semicolon": false
-  },
+    "semicolon": false,
+    "rules": {
+      "camelcase": [
+        "error",
+        {
+          "properties": "never"
+        }
+      ],
+      "capitalized-comments": 0
+    }
+  }
 }

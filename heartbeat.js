@@ -1,23 +1,22 @@
 'use strict'
 
-function _heartbeat() {
+function _pulse() {
 	this.isAlive = true
 }
 
 function heartbeat(wss, ws) {
 	ws.isAlive = true
-	ws.on('pong', _heartbeat)
+	ws.on('pong', _pulse)
 
 	setInterval(() => {
-		// wss.broadcast('message', 'serverrrrr')
-		wss.clients.forEach(ws => {
-			if (ws.isAlive === false) {
-				return ws.terminate()
+		wss.clients.forEach(_ws => {
+			if (_ws.isAlive === false) {
+				return _ws.terminate()
 			}
-			ws.isAlive = false
-			ws.ping('', false, true)
+			_ws.isAlive = false
+			_ws.ping('')
 		})
-	}, 1000)
+	}, 30000)
 }
 
 module.exports = heartbeat

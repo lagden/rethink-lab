@@ -1,3 +1,5 @@
+/* eslint camelcase: 0 */
+
 'use strict'
 
 const r = require('rethinkdb')

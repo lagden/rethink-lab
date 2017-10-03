@@ -1,0 +1,80 @@
+html {
+	box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: inherit;
+}
+
+body {
+	font-family: sans-serif;
+	box-sizing: border-box;
+	display: grid;
+	grid-gap: 1em;
+	grid-template-areas:
+		"header  ."
+		"sidebar boxes";
+	grid-template-rows: [header] minmax(auto, 50px) [sidebar boxes] fit-content(100%);
+	grid-template-columns: 300px minmax(400px, auto);
+	height: calc(100vh - 1em);
+}
+
+p {
+	margin: 0;
+	margin-bottom: 10px;
+}
+
+.header {
+	grid-area: header;
+}
+
+.sidebar {
+	grid-area: sidebar;
+}
+
+.boxes {
+	grid-area: boxes;
+	align-self: end;
+	justify-self: end;
+	display: flex;
+	flex-direction: row;
+}
+
+.box {
+	width: 200px;
+	height: 200px;
+	display: flex;
+	flex-direction: column;
+	margin-left: 5px;
+}
+
+.content {
+	flex: 2 1 100%;
+	/*background: #f00;*/
+	overflow: scroll;
+	padding: 5px;
+	border-radius: 3px;
+	border: 1px solid gray;
+	border-radius: 3px 3px 0px 0px;
+}
+
+.input {
+	flex: 1 0 auto;
+	background: #FFF;
+	color: #000;
+	border-radius: 0px 0px 3px 3px;
+	border: 1px solid gray;
+	border-top-width: 0;
+	height: 25px;
+	padding: 5px;
+	background: #e1e1e1;
+	margin: 0;
+}
+
+.input:focus {
+	flex: 1 0 auto;
+	background: lightgray;
+	outline: none;
+}
