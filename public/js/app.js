@@ -20,8 +20,8 @@ function getChatBox(userID) {
 }
 
 function onMessage(event) {
-	console.log('[message]')
 	const data = JSON.parse(event.data)
+	console.log('[message]', data)
 	// const time = new Date(data.date)
 	// const timeStr = time.toLocaleTimeString()
 	let box
@@ -34,13 +34,12 @@ function onMessage(event) {
 			box.add(data.text, 'other')
 			break
 		case 'addUser':
-			addUser(data.text)
+			addUser(data.user)
 			break
 		case 'removeUser':
-			removeUser(data.text)
+			removeUser(data.user)
 			break
 		case 'listUsers':
-			console.log(data.users)
 			data.users.forEach(user => {
 				addUser(user)
 			})
