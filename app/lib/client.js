@@ -2,7 +2,22 @@
 
 const {parse} = require('querystring')
 const debug = require('./debug')
-const {broadcast, sendTo} = require('./chat')
+const {broadcast} = require('./chat')
+const {message} = require('./rdb/message')
+
+function asc(a, b) {
+	if (a < b) {
+		return -1
+	}
+	if (a > b) {
+		return 1
+	}
+	return 0
+}
+
+function room(accumulator, currentValue) {
+	return `${accumulator}_${currentValue}`
+}
 
 class ClientSocket {
 	constructor(ws) {
@@ -24,13 +39,15 @@ class ClientSocket {
 		debug.log(`onMessage`, _data)
 		try {
 			const data = JSON.parse(_data)
-			const _to = sendTo(data.to)
 			switch (data.type) {
+				case 'cursor':
+					debug.log('abrindo o cursor')
+					break
 				case 'message':
-					if (_to) {
-						data.from = this._user
-						_to.send(JSON.stringify(data))
-					}
+					data.from = this._user
+					data.room = [this._user, data.to].sort(asc).reduce(room)
+					data.broker = this._broker
+					message(data)
 					break
 				default:
 					debug.log(`type not found: ${data.type}`)
