@@ -2,7 +2,7 @@
 
 const {parse} = require('querystring')
 const debug = require('./debug')
-const {broadcast} = require('./chat')
+const {broadcast} = require('./util')
 const {message} = require('./rdb/message')
 
 function asc(a, b) {

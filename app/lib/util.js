@@ -20,14 +20,12 @@ function broadcast(data, ws = false) {
 	})
 }
 
-function sendTo(user) {
-	let _to = false
+function sendTo(user, data) {
 	wss.clients.forEach(client => {
 		if (client.readyState === 1 && client._user === user) {
-			_to = client
+			client.send(data)
 		}
 	})
-	return _to
 }
 
 // Somente os usuários que pertecem ao mesmo Broker

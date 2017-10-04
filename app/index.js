@@ -2,7 +2,7 @@
 
 const server = require('./webserver')
 const wss = require('./websocket')
-const {broadcast, online} = require('./lib/chat')
+const {broadcast, online} = require('./lib/util')
 const ClientSocket = require('./lib/client')
 
 function onConnection(ws) {

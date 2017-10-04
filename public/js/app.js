@@ -33,6 +33,9 @@ function onMessage(event) {
 	}
 
 	switch (data.type) {
+		case 'server':
+			box.add(data.text, '[server]')
+			break
 		case 'message':
 			box.add(data.text, data.from)
 			break
