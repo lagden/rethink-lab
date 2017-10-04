@@ -1,6 +1,8 @@
 FROM node:8.5.0-alpine
 MAINTAINER Thiago Lagden <docker@lagden.in>
 
+RUN apk add --update python make g++
+
 # variáveis de ambiente
 ENV DEBUG=chat-websocket:*
 ENV NODE_ENV=production
