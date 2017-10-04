@@ -8,33 +8,61 @@ html {
 	box-sizing: inherit;
 }
 
+html, body {
+	margin: 0;
+	padding: 0;
+}
+
 body {
+	font-family: sans-serif;
+	padding: 0.5em;
+}
+
+.grid {
 	font-family: sans-serif;
 	box-sizing: border-box;
 	display: grid;
-	grid-gap: 1em;
+	grid-gap: 0.5em;
 	grid-template-areas:
-		"header  ."
-		"sidebar boxes";
-	grid-template-rows: [header] minmax(auto, 50px) [sidebar boxes] fit-content(100%);
-	grid-template-columns: 300px minmax(400px, auto);
-	height: calc(100vh - 1em);
+		"header "
+		"sidebar "
+		"boxes   ";
+	grid-template-rows: minmax(min-content, max-content);
+	grid-template-columns: auto;
+	height: 100vh;
+	background: #f1f1f1;
 }
 
-p {
+@media only screen and (min-width: 550px)  {
+	.grid {
+		grid-template-areas:
+			"header  header"
+			"sidebar boxes";
+		grid-template-rows: minmax(min-content, max-content);
+		grid-template-columns: 250px minmax(300px, auto);
+	}
+}
+
+h1, h2, p {
 	margin: 0;
-	margin-bottom: 10px;
+	margin-bottom: 0.5em;
 }
 
 .header {
+	/*background: green;*/
 	grid-area: header;
+	color: black;
+	margin: 0;
+	align-self: center;
 }
 
 .sidebar {
+	/*background: red;*/
 	grid-area: sidebar;
 }
 
 .boxes {
+	/*background: blue;*/
 	grid-area: boxes;
 	align-self: end;
 	justify-self: end;
@@ -52,7 +80,6 @@ p {
 
 .content {
 	flex: 2 1 100%;
-	/*background: #f00;*/
 	overflow: scroll;
 	padding: 5px;
 	border-radius: 3px;

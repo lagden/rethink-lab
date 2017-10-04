@@ -5,6 +5,8 @@ MAINTAINER Thiago Lagden <docker@lagden.in>
 ENV DEBUG=chat-websocket:*
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV RDB_HOST=rethinkdb
+ENV RDB_PORT=3000
 ENV HOME=/home/node
 ENV APP=$HOME/chat-websocket
 

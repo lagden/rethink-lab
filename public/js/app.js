@@ -1,21 +1,24 @@
-/* globals window, Object, document, WebSocket */
+/* globals window, Object, document, WebSocket, prompt */
 /* eslint import/extensions: 0 */
+/* eslint no-alert: 0 */
 
 'use strict'
 
 import Chatbox from './chatbox.js'
 
-const protocolo = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-const ws = new WebSocket(`${protocolo}//${window.location.host}`)
+const userList = document.getElementById('userList')
 const chatBox = Object.create(null)
+const protocolo = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+// const ws = new WebSocket(`${protocolo}//${window.location.host}`)
+let ws
 
-function getChatBox(userID) {
-	let box = chatBox[`chatbox_${userID}`]
+function getChatBox(user) {
+	let box = chatBox[`chatbox_${user}`]
 	if (box) {
 		return box
 	}
-	box = new Chatbox(ws, userID)
-	chatBox[`chatbox_${userID}`] = box
+	box = new Chatbox(ws, user)
+	chatBox[`chatbox_${user}`] = box
 	return box
 }
 
@@ -31,7 +34,7 @@ function onMessage(event) {
 
 	switch (data.type) {
 		case 'message':
-			box.add(data.text, 'other')
+			box.add(data.text, data.from)
 			break
 		case 'addUser':
 			addUser(data.user)
@@ -55,25 +58,33 @@ function onOpen(event) {
 
 function onClose(event) {
 	console.log('[disconnected]', event)
+	userList.querySelectorAll('li.user').forEach(el => {
+		removeUser(el.dataset.user)
+	})
 }
 
-ws.onopen = onOpen
-ws.onclose = onClose
-ws.onmessage = onMessage
+// TMP
+function initialize() {
+	const username = prompt('Escreva seu username:')
+	if (username) {
+		ws = new WebSocket(`${protocolo}//${window.location.host}?user=${username}&broker=8`)
+		ws.onopen = onOpen
+		ws.onclose = onClose
+		ws.onmessage = onMessage
+	}
+}
 
 // UserList Stuff
-const userList = document.getElementById('userList')
-
-function addUser(userID) {
-	userList.insertAdjacentHTML('beforeend', `<li class="user" id="${userID}" data-user="${userID}">${userID}</li>`)
+function addUser(user) {
+	userList.insertAdjacentHTML('beforeend', `<li class="user" id="user_${user}" data-user="${user}">${user}</li>`)
 }
 
-function removeUser(userID) {
-	const user = document.getElementById(userID)
-	const box = getChatBox(userID)
-	box.destroy()
-	if (user) {
-		user.remove()
+function removeUser(user) {
+	const _user = document.getElementById(`user_${user}`)
+	const _box = getChatBox(user)
+	_box.destroy()
+	if (_user) {
+		_user.remove()
 	}
 }
 
@@ -91,10 +102,12 @@ function bubblingMatchesSelector(target, selector) {
 
 function loadChatbox(event) {
 	const target = bubblingMatchesSelector(event.target, '.user')
-	const userID = target.dataset.user
-	if (userID) {
-		getChatBox(userID)
+	const user = target.dataset.user
+	if (user) {
+		getChatBox(user)
 	}
 }
 
 userList.addEventListener('click', loadChatbox, false)
+
+initialize()

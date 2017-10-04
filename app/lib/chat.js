@@ -3,6 +3,15 @@
 // const debug = require('./debug')
 const wss = require('../websocket')
 
+function _check(ws, client) {
+	return (
+		client !== ws &&
+		client.readyState === 1 &&
+		client._broker &&
+		client._broker === ws._broker
+	)
+}
+
 function broadcast(data, ws = false) {
 	wss.clients.forEach(client => {
 		if (client !== ws && client.readyState === 1) {
@@ -11,21 +20,22 @@ function broadcast(data, ws = false) {
 	})
 }
 
-function sendTo(id) {
+function sendTo(user) {
 	let _to = false
 	wss.clients.forEach(client => {
-		if (client.readyState === 1 && client._key === id) {
+		if (client.readyState === 1 && client._user === user) {
 			_to = client
 		}
 	})
 	return _to
 }
 
+// Somente os usuários que pertecem ao mesmo Broker
 function online(ws) {
 	const users = []
 	wss.clients.forEach(client => {
-		if (client !== ws && client.readyState === 1) {
-			users.push(client._key)
+		if (_check(ws, client)) {
+			users.push(client._user)
 		}
 	})
 	ws.send(JSON.stringify({

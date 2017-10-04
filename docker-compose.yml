@@ -1,16 +1,17 @@
 version: '3'
 services:
   chat:
-    container_name: websocket_dev
+    container_name: websocket
     build: ./
     command: node index.js
     environment:
       DEBUG: chat-websocket:*
       NODE_ENV: dev
       PORT: 3000
-      RETHINK_HOST: mongodb://mongo:27017/corretora_{db}
+      RDB_HOST: rethinkdb
+      RDB_PORT: 28015
     ports:
-      - 3001:3000
+      - 3000:3000
     volumes:
       - ./app:/home/node/chat-websocket/app
     networks:

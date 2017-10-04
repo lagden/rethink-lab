@@ -3,6 +3,7 @@
 'use strict'
 
 const r = require('rethinkdb')
+const debug = require('../debug')
 
 async function db(conn, name) {
 	try {
@@ -14,9 +15,8 @@ async function db(conn, name) {
 		const {dbs_created} = await r.dbCreate(name).run(conn)
 		return dbs_created === 1
 	} catch (err) {
-		console.dir(err, {colors: true})
+		debug.error(err)
 	}
-
 	throw new Error(`Falha no banco de dados: ${name}`)
 }
 
@@ -30,7 +30,7 @@ async function table(conn, db, name) {
 		const {tables_created} = await db.tableCreate(name).run(conn)
 		return tables_created === 1
 	} catch (err) {
-		console.dir(err, {colors: true})
+		debug.error(err)
 	}
 	throw new Error(`Falha na tabela: ${name}`)
 }

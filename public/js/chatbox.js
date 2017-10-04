@@ -2,12 +2,12 @@
 'use strict'
 
 class Chatbox {
-	constructor(ws, userID) {
+	constructor(ws, user) {
 		const docFragment = document.createDocumentFragment()
-		this.userID = userID
+		this.user = user
 		this.ws = ws
 		this.box = document.createElement('div')
-		this.box.id = `chatbox_${userID}`
+		this.box.id = `chatbox_${user}`
 		this.box.className = 'box'
 		this.content = document.createElement('div')
 		this.content.className = 'content'
@@ -37,7 +37,7 @@ class Chatbox {
 			const data = {
 				type: 'message',
 				text: v,
-				to: this.userID,
+				to: this.user,
 				date: Date.now()
 			}
 			console.log('enviado para:', data)

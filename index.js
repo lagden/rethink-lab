@@ -5,6 +5,8 @@ const server = require('./app/.')
 
 const {PORT = 3000} = process.env
 
+process.title = `chat_websocket_${PORT}`
+
 function onListen() {
 	debug.log(`Server listening on port ${server.address().port}`)
 }

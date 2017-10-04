@@ -14,7 +14,7 @@ function onConnection(ws) {
 	// Avisa para os outros usuários que você também está conectado
 	broadcast(JSON.stringify({
 		type: 'addUser',
-		user: clientSocket.ws._key
+		user: clientSocket.ws._user
 	}), ws)
 }
 
