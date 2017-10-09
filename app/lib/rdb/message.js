@@ -16,9 +16,9 @@ function _falha(data) {
 async function message(data, conn) {
 	let ok = false
 	try {
-		const {broker} = data
+		const {broker, to: user} = data
 		const dbName = `broker_${broker}`
-		const tableName = 'messages'
+		const tableName = `messages_${user}`
 		const {inserted = false} = await r.db(dbName).table(tableName).insert(data).run(conn)
 		ok = inserted
 		if (ok === false) {
