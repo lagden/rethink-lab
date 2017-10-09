@@ -4,20 +4,7 @@ const {parse} = require('querystring')
 const debug = require('./debug')
 const {broadcast} = require('./util')
 const {message} = require('./rdb/message')
-
-function asc(a, b) {
-	if (a < b) {
-		return -1
-	}
-	if (a > b) {
-		return 1
-	}
-	return 0
-}
-
-function room(accumulator, currentValue) {
-	return `${accumulator}_${currentValue}`
-}
+const changes = require('./rdb/changes')
 
 class ClientSocket {
 	constructor(ws) {
@@ -30,8 +17,12 @@ class ClientSocket {
 
 		debug.log(`entrando ${this.ws._user}`)
 
-		// Listeners
-		this.ws.on('message', this.onMessage)
+		// Escuta as mensagem que são enviadas para você
+		changes(ws).then(conn => {
+			this.ws._conn = conn
+			this.ws.on('message', this.onMessage)
+		})
+
 		this.ws.on('close', this.onClose)
 	}
 
@@ -40,14 +31,10 @@ class ClientSocket {
 		try {
 			const data = JSON.parse(_data)
 			switch (data.type) {
-				case 'cursor':
-					debug.log('abrindo o cursor')
-					break
 				case 'message':
 					data.from = this._user
-					data.room = [this._user, data.to].sort(asc).reduce(room)
 					data.broker = this._broker
-					message(data)
+					message(data, this._conn)
 					break
 				default:
 					debug.log(`type not found: ${data.type}`)
@@ -59,6 +46,11 @@ class ClientSocket {
 
 	onClose() {
 		debug.log(`saindo ${this._user}`)
+		// Fecha a conexão com o banco
+		if (this._conn && this._conn.close) {
+			this._conn.close()
+		}
+		// Envia mensagem para todos dizendo que você saiu
 		broadcast(JSON.stringify({
 			type: 'removeUser',
 			user: this._user
