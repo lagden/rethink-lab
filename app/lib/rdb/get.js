@@ -28,6 +28,9 @@ async function table(conn, db, name) {
 			return true
 		}
 		const {tables_created} = await db.tableCreate(name).run(conn)
+		//
+		await db.table(name).indexCreate('room').run(conn)
+		//
 		return tables_created === 1
 	} catch (err) {
 		debug.error(err)

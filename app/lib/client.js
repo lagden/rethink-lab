@@ -6,6 +6,20 @@ const {broadcast} = require('./util')
 const {message} = require('./rdb/message')
 const changes = require('./rdb/changes')
 
+function asc(a, b) {
+	if (a < b) {
+		return -1
+	}
+	if (a > b) {
+		return 1
+	}
+	return 0
+}
+
+function room(accumulator, currentValue) {
+	return `${accumulator}_${currentValue}`
+}
+
 class ClientSocket {
 	constructor(ws) {
 		// console.log(ws.upgradeReq.headers)
@@ -34,6 +48,7 @@ class ClientSocket {
 				case 'message':
 					data.from = this._user
 					data.broker = this._broker
+					data.room = [this._user, data.to].sort(asc).reduce(room)
 					message(data, this._conn)
 					break
 				default:
