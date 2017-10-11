@@ -42,6 +42,24 @@ function online(ws) {
 	}))
 }
 
+// Sort
+function asc(a, b) {
+	if (a < b) {
+		return -1
+	}
+	if (a > b) {
+		return 1
+	}
+	return 0
+}
+
+// Reduce
+function room(accumulator, currentValue) {
+	return `${accumulator}_${currentValue}`
+}
+
 exports.broadcast = broadcast
 exports.sendTo = sendTo
 exports.online = online
+exports.asc = asc
+exports.room = room

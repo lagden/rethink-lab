@@ -2,35 +2,23 @@
 
 const {parse} = require('querystring')
 const debug = require('./debug')
-const {broadcast} = require('./util')
+const {broadcast, asc, room} = require('./util')
 const {message} = require('./rdb/message')
 const changes = require('./rdb/changes')
-
-function asc(a, b) {
-	if (a < b) {
-		return -1
-	}
-	if (a > b) {
-		return 1
-	}
-	return 0
-}
-
-function room(accumulator, currentValue) {
-	return `${accumulator}_${currentValue}`
-}
 
 class ClientSocket {
 	constructor(ws) {
 		// console.log(ws.upgradeReq.headers)
 		const {user, broker} = parse(ws.upgradeReq.url.split('?')[1])
 		this.ws = ws
-		this.ws._key = ws.upgradeReq.headers['sec-websocket-key']
 		this.ws._user = user
 		this.ws._broker = broker
 
+		console.log(ws.upgradeReq._tex)
+
 		debug.log(`entrando ${this.ws._user}`)
 
+		// Changefeeds
 		// Escuta as mensagem que são enviadas para você
 		changes(ws).then(conn => {
 			this.ws._conn = conn
