@@ -3,8 +3,8 @@
 const {parse} = require('querystring')
 const debug = require('./debug')
 const {broadcast, asc, room} = require('./util')
-const {message} = require('./rdb/message')
-const changes = require('./rdb/changes')
+const {message} = require('./message')
+const changes = require('./changes')
 
 class ClientSocket {
 	constructor(ws) {

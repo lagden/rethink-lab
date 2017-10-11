@@ -1,8 +1,8 @@
 'use strict'
 
 const r = require('rethinkdb')
-const debug = require('../debug')
-const {sendTo} = require('../util')
+const debug = require('./debug')
+const {sendTo} = require('./util')
 
 function _falha(data) {
 	const to = data.from

@@ -2,9 +2,9 @@
 'use strict'
 
 const r = require('rethinkdb')
-const debug = require('../debug')
-const connect = require('./conn')
-const {db, table} = require('./get')
+const debug = require('./debug')
+const connect = require('./rdb/conn')
+const {db, table} = require('./rdb/get')
 
 async function changes(client) {
 	let conn = false

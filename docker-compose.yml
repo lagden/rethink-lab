@@ -16,6 +16,8 @@ services:
       - ./app:/home/node/chat-websocket/app
     networks:
       - app-tier
+    depends_on:
+      - rethinkdb
 
   rethinkdb:
     image: rethinkdb:2.3.5
