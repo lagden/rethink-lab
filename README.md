@@ -7,19 +7,22 @@
 
 Apenas um show!!
 
+## Estrutura
 
-## Listar uma conversa
+Cada corretora tem seu banco de dados (`broker_{id}`) e uma tabela (`messages`)
 
-Todas as mensagens são gravadas na tabela `messages` dentro de um banco de dado `broker_{id}`,
-e é utilizado o campo `room` para para agrupar elas.
+# Listar uma conversa
 
-Abaixo temos o exemplo de uma query para listar as 10 últimas mensagens de uma sala `room`
+Todas as mensagens são gravadas na tabela (`messages`), 
+e o campo sala (`room`) é utilizado agrupá-las.
+
+Abaixo temos o exemplo de uma query para listar as 10 últimas mensagens de uma sala (`room`)
 
 ```javascript
 r
   .db('broker_8')
   .table('messages')
-  .filter({room: 'xxx_zzz'})
+  .filter({room: 'ana_lucas'})
   .orderBy('date')
   .limit(10)
 ```
