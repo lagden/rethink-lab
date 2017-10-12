@@ -5,6 +5,7 @@
 const r = require('rethinkdb')
 const debug = require('../debug')
 
+// Retorna um db ou cria se não existir
 async function db(conn, name) {
 	try {
 		const dbList = await r.dbList().run(conn)
@@ -20,6 +21,7 @@ async function db(conn, name) {
 	throw new Error(`Falha no banco de dados: ${name}`)
 }
 
+// Retorna uma tabela ou cria se não existir
 async function table(conn, db, name) {
 	try {
 		const tableList = await db.tableList().run(conn)

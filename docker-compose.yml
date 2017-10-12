@@ -11,18 +11,20 @@ services:
       RDB_HOST: rethinkdb
       RDB_PORT: 28015
     ports:
-      - 3000:3000
+      - 1235:3000
     volumes:
       - ./app:/home/node/chat-websocket/app
     networks:
       - app-tier
+    depends_on:
+      - rethinkdb
 
   rethinkdb:
-    image: rethinkdb:2.3.5
+    image: rethinkdb:2.3.6
     ports:
-      - 8080:8080
-      - 28015:28015
-      - 29015:29015
+      - 8081:8080
+      - 28016:28015
+      - 29016:29015
     volumes:
       - db-data:/data
     networks:
@@ -33,3 +35,5 @@ volumes:
 
 networks:
   app-tier:
+
+docker-compose up --build -d
