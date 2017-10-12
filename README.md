@@ -9,14 +9,14 @@ Apenas um show!!
 
 ## Estrutura
 
-Cada corretora tem seu banco de dados (`broker_{id}`) e uma tabela (`messages`)
+Cada corretora tem seu banco de dados `broker_{id}` e uma tabela `messages`
 
 # Listar uma conversa
 
-Todas as mensagens são gravadas na tabela (`messages`), 
-e o campo sala (`room`) é utilizado agrupá-las.
+Todas as mensagens são gravadas na tabela `messages`, 
+e o campo `room` é utilizado agrupá-las.
 
-Abaixo temos o exemplo de uma query para listar as 10 últimas mensagens de uma sala (`room`)
+Abaixo temos o exemplo de uma query para listar as 10 últimas mensagens de uma `room`
 
 ```javascript
 r
