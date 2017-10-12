@@ -7,25 +7,21 @@
 
 Apenas um show!!
 
+
 ## Listar uma conversa
 
-Como cada usuário tem sua tabela de mensagens com todas as mensagens, é utilizado o campo `room` para
-relacionar a conversa.
+Todas as mensagens são gravadas na tabela `messages` dentro de um banco de dado `broker_{id}`,
+e é utilizado o campo `room` para para agrupar elas.
 
-Abaixo temos o exemplo de uma query para listar uma conversa
+Abaixo temos o exemplo de uma query para listar as 10 últimas mensagens de uma sala `room`
 
 ```javascript
 r
   .db('broker_8')
-  .table('messages_lagden')
-  .filter({room: 'andrebassi_lagden'})
-  .union(
-    r
-      .db('broker_8')
-      .table('messages_andrebassi')
-      .filter({room: 'andrebassi_lagden'})
-  )
-  .orderBy('date').limit(10)
+  .table('messages')
+  .filter({room: 'xxx_zzz'})
+  .orderBy('date')
+  .limit(10)
 ```
 
 

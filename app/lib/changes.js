@@ -12,9 +12,9 @@ async function changes(client) {
 		conn = await connect()
 		const {_broker: broker, _user: user} = client
 		const dbName = `broker_${broker}`
-		const tableName = `messages_${user}`
+		const tableName = `messages`
 		await db(conn, dbName)
-		await table(conn, r.db(dbName), tableName, 'room')
+		await table(conn, r.db(dbName), tableName)
 		const feed = await r.db(dbName).table(tableName).filter({to: user}).changes().run(conn)
 		feed.on('data', data => {
 			debug.log('feed data', data.new_val, user)

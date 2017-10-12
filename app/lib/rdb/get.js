@@ -22,7 +22,7 @@ async function db(conn, name) {
 }
 
 // Retorna uma tabela ou cria se não existir
-async function table(conn, db, name, index) {
+async function table(conn, db, name) {
 	try {
 		const tableList = await db.tableList().run(conn)
 		const table = tableList.find(table => table === name)
@@ -30,9 +30,6 @@ async function table(conn, db, name, index) {
 			return true
 		}
 		const {tables_created} = await db.tableCreate(name).run(conn)
-		if (tables_created === 1) {
-			await db.table(name).indexCreate(index).run(conn)
-		}
 		return tables_created === 1
 	} catch (err) {
 		debug.error(err)
