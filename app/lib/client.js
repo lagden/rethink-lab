@@ -1,12 +1,21 @@
+/**
+ * Módulo do ClientSocket
+ * @module app/lib/client
+ */
 'use strict'
 
 const {parse} = require('querystring')
-const debug = require('./debug')
+const debug = require('@tadashi/debug')
 const {broadcast, asc, room} = require('./util')
 const {message} = require('./message')
 const changes = require('./changes')
 
+/** Class representa um cliente WebSocket. */
 class ClientSocket {
+	/**
+	 * Cria o clientSocket
+	 * @param {object} ws - socket client
+	 */
 	constructor(ws) {
 		// console.log(ws.upgradeReq.headers)
 		const {user, broker} = parse(ws.upgradeReq.url.split('?')[1])
@@ -22,13 +31,14 @@ class ClientSocket {
 		// Escuta as mensagem que são enviadas para você
 		changes(ws).then(conn => {
 			this.ws._conn = conn
-			this.ws.on('message', this.onMessage)
+			this.ws.on('message', this._onMessage)
 		})
 
-		this.ws.on('close', this.onClose)
+		this.ws.on('close', this._onClose)
 	}
 
-	onMessage(_data) {
+	/** Manipulador de mensagem */
+	_onMessage(_data) {
 		debug.log(`onMessage`, _data)
 		try {
 			const data = JSON.parse(_data)
@@ -47,13 +57,14 @@ class ClientSocket {
 		}
 	}
 
-	onClose() {
+	/** Manipulador do socket fechado */
+	_onClose() {
 		debug.log(`saindo ${this._user}`)
 		// Fecha a conexão com o banco
 		if (this._conn && this._conn.close) {
 			this._conn.close()
 		}
-		// Envia mensagem para todos dizendo que você saiu
+		// Avisa para todos que você saiu
 		broadcast(JSON.stringify({
 			type: 'removeUser',
 			user: this._user

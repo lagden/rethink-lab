@@ -5,6 +5,7 @@ services:
     build: ./
     command: node index.js
     environment:
+      PREFIX_DEBUG: chat-websocket
       DEBUG: chat-websocket:*
       NODE_ENV: dev
       PORT: 3000

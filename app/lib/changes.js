@@ -1,11 +1,20 @@
-/* eslint camelcase: 0 */
+/**
+ * Módulo de inscrição
+ * @module app/lib/changes
+ */
 'use strict'
 
 const r = require('rethinkdb')
-const debug = require('./debug')
+const debug = require('@tadashi/debug')
 const connect = require('./rdb/conn')
 const {db, table} = require('./rdb/get')
 
+/**
+ * Abre a conexão com o banco e se inscreve no changefeeds
+ *
+ * @param {object} client - socket client
+ * @returns {(boolean|object)} Retorna a conexão se não ocorrer erros, ou false
+ */
 async function changes(client) {
 	let conn = false
 	try {

@@ -4,7 +4,7 @@
 
 'use strict'
 
-import Chatbox from './chatbox.js'
+import Chatbox from './chat-box.js'
 
 const userList = document.getElementById('userList')
 const chatBox = Object.create(null)
@@ -83,11 +83,15 @@ function addUser(user) {
 }
 
 function removeUser(user) {
-	const _user = document.getElementById(`user_${user}`)
-	const _box = getChatBox(user)
-	_box.destroy()
-	if (_user) {
-		_user.remove()
+	const chatboxUser = `chatbox_${user}`
+	if (Reflect.has(chatBox, chatboxUser)) {
+		const _user = document.getElementById(`user_${user}`)
+		const _box = chatBox[chatboxUser]
+		_box.destroy()
+		Reflect.deleteProperty(chatBox, chatboxUser)
+		if (_user) {
+			_user.remove()
+		}
 	}
 }
 

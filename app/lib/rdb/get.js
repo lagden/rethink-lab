@@ -1,11 +1,22 @@
 /* eslint camelcase: 0 */
 
+/**
+ * Módulo de ajuda para o RethinkDB
+ * @module app/lib/rdb/get
+ */
 'use strict'
 
 const r = require('rethinkdb')
-const debug = require('../debug')
+const debug = require('@tadashi/debug')
 
-// Retorna um db ou cria se não existir
+/**
+ * Verifica se o banco existe ou cria
+ *
+ * @param {object} conn - Conexão do banco de dados
+ * @param {string} name - Nome do banco de dados
+ * @returns {boolean} Retorna true se encontrou ou criou um banco, ou false
+ * @throws {Error} Falha no banco de dados
+ */
 async function db(conn, name) {
 	try {
 		const dbList = await r.dbList().run(conn)
@@ -21,7 +32,15 @@ async function db(conn, name) {
 	throw new Error(`Falha no banco de dados: ${name}`)
 }
 
-// Retorna uma tabela ou cria se não existir
+/**
+ * Verifica se a tabela existe ou cria
+ *
+ * @param {object} conn - Conexão do banco de dados
+ * @param {object} db   - Banco de dados
+ * @param {string} name - Nome da tabela
+ * @returns {boolean} Retorna true se encontrou ou criou uma tabela, ou false
+ * @throws {Error} Falha na tabela
+ */
 async function table(conn, db, name) {
 	try {
 		const tableList = await db.tableList().run(conn)

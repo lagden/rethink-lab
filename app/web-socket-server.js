@@ -1,13 +1,15 @@
+/**
+ * Módulo de Web Socket Server
+ * @module app/web-socket-server
+ */
 'use strict'
 
 // const {parse} = require('querystring')
 const {Server} = require('uws')
-const server = require('./webserver')
-const debug = require('./lib/debug')
+// const debug = require('@tadashi/debug')
+const server = require('./web-server')
 
-debug.log('entrou no wss')
-
-// WebSocket
+/** Cria o servidor web socket */
 const wss = new Server({server, async verifyClient(info, cb) {
 	// let valid = false
 	// let code = 401

@@ -1,10 +1,11 @@
-FROM node:8.5.0-alpine
+FROM node:8.6.0-alpine
 MAINTAINER Thiago Lagden <docker@lagden.in>
 
 RUN apk add --update python make g++
 
 # variáveis de ambiente
-ENV DEBUG=chat-websocket:*
+ENV PREFIX_DEBUG=chat-websocket
+ENV DEBUG=$PREFIX_DEBUG:*
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV RDB_HOST=rethinkdb

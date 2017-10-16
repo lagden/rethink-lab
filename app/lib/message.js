@@ -1,7 +1,11 @@
+/**
+ * Módulo de Mensagem
+ * @module app/lib/message
+ */
 'use strict'
 
 const r = require('rethinkdb')
-const debug = require('./debug')
+const debug = require('@tadashi/debug')
 const {sendTo} = require('./util')
 
 function _falha(data) {
@@ -13,6 +17,13 @@ function _falha(data) {
 	sendTo(to, JSON.stringify(data))
 }
 
+/**
+ * Insere as mensagens no banco de dados
+ *
+ * @param {object} data - Objeto JSON da mensagem
+ * @param {object} conn - Conexão do banco de dados
+ * @returns {boolean} Retorna true se inseriu no banco, ou false
+ */
 async function message(data, conn) {
 	let ok = false
 	try {

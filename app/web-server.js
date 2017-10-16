@@ -1,3 +1,7 @@
+/**
+ * Módulo de Web Server
+ * @module app/webserver
+ */
 'use strict'
 
 const {join, normalize} = require('path')
@@ -5,9 +9,9 @@ const {createReadStream} = require('fs')
 const {PassThrough} = require('stream')
 const http = require('http')
 const {lookup} = require('mime-types')
-const debug = require('./lib/debug')
+const debug = require('@tadashi/debug')
 
-// WebServer
+/** Cria o servidor web */
 const server = http.createServer((req, res) => {
 	const pass = new PassThrough()
 	const file = req.url === '/' ? 'index.html' : req.url

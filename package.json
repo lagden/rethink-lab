@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "xo",
-    "start": "NODE_ENV=dev DEBUG=chat-websocket:* node index.js"
+    "start": "export PREFIX_DEBUG=chat-websocket; NODE_ENV=dev DEBUG=$PREFIX_DEBUG:* node index.js"
   },
   "keywords": [
     "rethinkdb",
@@ -15,7 +15,7 @@
   "author": "Thiago Lagden",
   "license": "MIT",
   "dependencies": {
-    "debug": "3.1.0",
+    "@tadashi/debug": "1.0.0",
     "mime-types": "2.1.17",
     "rethinkdb": "2.3.3",
     "uws": "8.14.1"

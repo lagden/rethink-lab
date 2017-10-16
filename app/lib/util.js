@@ -1,7 +1,7 @@
 'use strict'
 
-// const debug = require('./debug')
-const wss = require('../websocket')
+// const debug = require('@tadashi/debug')
+const wss = require('../web-socket-server')
 
 function _check(ws, client) {
 	return (

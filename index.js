@@ -1,6 +1,6 @@
 'use strict'
 
-const debug = require('./app/lib/debug')
+const debug = require('@tadashi/debug')
 const server = require('./app/.')
 
 const {PORT = 3000} = process.env
